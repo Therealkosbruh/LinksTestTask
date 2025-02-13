@@ -6,39 +6,55 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Бэкенд будет доступен на порту 3000
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
-      DATABASE_HOST: postgres
-      DATABASE_NAME: links
+      DATABASE_HOST: postgres  # Имя сервиса БД (не localhost!)
+      DATABASE_NAME: dbdb
       DATABASE_USER: postgres
       DATABASE_PASS: 79513446821zzz
       DATABASE_PORT: 5432
     restart: always
+    networks:
+      - app_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3001:80"
+      - "3001:3001"  
     depends_on:
       - backend
     restart: always
+    networks:
+      - app_network
 
   postgres:
     image: postgres:15
     container_name: postgres_db
     ports:
-      - "5432:5432"
+         - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 79513446821zzz
-      POSTGRES_DB: links
+      POSTGRES_DB: dbdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 3s
+    networks:
+      - app_network
 
 volumes:
   postgres_data:
+
+networks:
+  app_network:
+    driver: bridge

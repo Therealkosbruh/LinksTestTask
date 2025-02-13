@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Delete, Param, Body, NotFoundException, Res, Ip, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { UrlsService } from './urls.service';
-
+import axios from 'axios';
 @Controller('url')
 export class UrlController {
   constructor(private readonly urlService: UrlsService) {}
@@ -17,7 +17,7 @@ export class UrlController {
   }
 
   @Get(':shortUrl')
-  async redirect(@Param('shortUrl') shortUrl: string, @Res() res: Response, @Ip() ip: string) {
+  async redirect(@Param('shortUrl') shortUrl: string, @Res() res: Response) {
     const url = await this.urlService.findByShortUrl(shortUrl);
     if (!url) throw new NotFoundException('Short URL not found');
 
@@ -25,8 +25,15 @@ export class UrlController {
       throw new HttpException('Short URL expired', HttpStatus.GONE);
     }
 
-    await this.urlService.trackClick(url, ip);
-    return res.redirect(url.originalUrl);
+    try {
+      await axios.get(url.originalUrl, { timeout: 5000 });
+      return res.json({ originalUrl: url.originalUrl });
+    } catch (error) {
+      if (error.code === 'ENOTFOUND') {
+        return res.json({ redirectToError: true });
+      }
+      return res.json({ originalUrl: url.originalUrl });
+    }
   }
 
   @Get('info/:shortUrl')

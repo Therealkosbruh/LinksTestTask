@@ -37,20 +37,21 @@ export default function Table() {
     fetchLinks();
   }, []);
 
- 
   const handleShortUrlClick = async (event: React.MouseEvent, shortUrl: string) => {
     event.stopPropagation();
+  
     try {
-      const response = await fetch(`http://localhost:3000/url/${shortUrl}`, { method: "HEAD" });
-      if (response.status === 404) {
-        window.location.href = "/error"; 
-        return;
+      const response = await fetch(`http://localhost:3000/url/${shortUrl}`);
+      const data = await response.json();
+      if (data.redirectToError) {
+        window.location.href = "/error";
+      } else {
+        window.location.href = data.originalUrl;
       }
-      if (!response.ok) throw new Error("Ошибка при переходе");
-      window.open(`http://localhost:3000/url/${shortUrl}`, "_blank");
-      } catch (error) {
-        window.location.href = "/error"; 
-      }
+    } catch (error) {
+      console.error("Ошибка при получении ссылки:", error);
+      window.location.href = "/error";
+    }
   };
   
   const handleRowClick = async (link: UrlData) => {
