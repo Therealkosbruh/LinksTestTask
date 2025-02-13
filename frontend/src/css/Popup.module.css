@@ -1,0 +1,110 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .popup {
+    background-color: #8b8b8b;
+    padding: 20px;
+    border-radius: 20px;
+    width: 450px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .closeIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+  .inputField {
+    border-radius: 20px;
+    padding: 12px 15px;
+    width: 100%;
+    border: 1px solid silver;
+    font: inherit;
+    background: rgba(255, 255, 255, 0.7);
+    box-sizing: border-box;
+    color: black;
+    margin-bottom: 10px;
+    transition: border 0.3s ease;
+  }
+  
+  .inputField:focus {
+    border: 2px solid black;
+    outline: none;
+  }
+  
+  .createButton {
+    width: 100%;
+    padding: 12px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .createButton:hover {
+    background-color: darkgreen;
+  }
+
+
+  .deleteButton {
+    width: 100%;
+    padding: 12px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .deleteButton:hover {
+    background-color: darkred;
+  }
+
+  .closeButton {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .closeButton:hover {
+    background-color: #cc0000;
+  }
+  
+  .originalUrl {
+    word-wrap: break-word; 
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    max-width: 100%; 
+    white-space: normal; 
+  }
+  
+  
+  
