@@ -6,15 +6,15 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"  # Бэкенд будет доступен на порту 3000
+      - "3000:3000"  
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_HOST: postgres  # Имя сервиса БД (не localhost!)
+      DATABASE_HOST: postgres  
       DATABASE_NAME: dbdb
       DATABASE_USER: postgres
-      DATABASE_PASS: 79513446821zzz
+      DATABASE_PASS: 
       DATABASE_PORT: 5432
     restart: always
     networks:
@@ -39,7 +39,7 @@ services:
          - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 79513446821zzz
+      POSTGRES_PASSWORD: 
       POSTGRES_DB: dbdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
