@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Url } from './url.entity';
@@ -26,7 +26,7 @@ export class UrlsService {
     const url = this.urlRepository.create({
       originalUrl,
       shortUrl,
-      alias: alias ? alias : undefined, 
+      alias: alias || null, 
       expiresAt: expirationDate,
     });
 
@@ -35,7 +35,7 @@ export class UrlsService {
     return {
       id: savedUrl.id,
       shortUrl: savedUrl.shortUrl,
-      alias: savedUrl.alias ?? null, 
+      alias: savedUrl.alias, 
       originalUrl: savedUrl.originalUrl,
       expiresAt: savedUrl.expiresAt ? moment(savedUrl.expiresAt).format('YYYY-MM-DD HH:mm:ss') : null,
       createdAt: moment(savedUrl.createdAt).format('YYYY-MM-DD HH:mm:ss'),
@@ -52,7 +52,7 @@ export class UrlsService {
     await this.urlRepository.save(url);
 
     const clickRecord = this.clickAnalyticsRepository.create({ 
-      url: { id: url.id }, 
+      url, 
       ipAddress 
     });
 
@@ -69,15 +69,17 @@ export class UrlsService {
   }
 
   async getAnalytics(shortUrl: string): Promise<{ count: number; lastIps: string[] }> {
-    const url = await this.urlRepository.findOne({ where: { shortUrl } });
-    if (!url) throw new NotFoundException("Short URL not found");
-
-    const clicks = await this.clickAnalyticsRepository.find({
-      where: { url: { id: url.id } },
-      order: { clickedAt: 'DESC' },
-      take: 5,
+    const url = await this.urlRepository.findOne({ 
+      where: { shortUrl },
+      relations: ['clicks'],
     });
 
-    return { count: clicks.length, lastIps: clicks.map((click) => click.ipAddress) };
+    if (!url) throw new NotFoundException("Short URL not found");
+
+    const lastClicks = url.clicks
+      .sort((a, b) => b.clickedAt.getTime() - a.clickedAt.getTime())
+      .slice(0, 5);
+
+    return { count: url.clickCount, lastIps: lastClicks.map((click) => click.ipAddress) };
   }
 }

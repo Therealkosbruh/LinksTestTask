@@ -14,7 +14,7 @@ services:
       DATABASE_HOST: postgres  
       DATABASE_NAME: dbdb
       DATABASE_USER: postgres
-      DATABASE_PASS: 
+      DATABASE_PASS: 79513446821zzz
       DATABASE_PORT: 5432
     restart: always
     networks:
@@ -39,7 +39,7 @@ services:
          - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 
+      POSTGRES_PASSWORD: 79513446821zzz
       POSTGRES_DB: dbdb
     volumes:
       - postgres_data:/var/lib/postgresql/data

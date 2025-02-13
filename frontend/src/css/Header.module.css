@@ -3,7 +3,6 @@ header{
     position: fixed;
     top: 0;
     left: 0;
-    /* background-color: rgba(24, 24, 24, 0.8); */
     background-color: rgb(24, 24, 24);
     color: #fff;
     display: flex;
